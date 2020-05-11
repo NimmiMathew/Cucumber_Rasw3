@@ -1,0 +1,78 @@
+package Stepdefinitions;
+
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Assert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+
+
+
+public class Steps {
+	WebDriver driver;
+	String val;
+	@Given("User is on login page")
+	public void user_is_on_login_page() {
+		System.setProperty("webdriver.chrome.driver", "./drivers/chromedriver.exe");
+		 driver=new ChromeDriver();
+		driver.get("https://www.flipkart.com/");
+	}
+
+	@When("User enters valid username {string}")
+	public void user_enters_valid_username(String uname) {
+	   driver.findElement(By.xpath("//input[@class='_2zrpKA _1dBPDZ']")).sendKeys(uname);
+	}
+
+	@When("User enters valid password  {string}")
+	public void user_enters_valid_password(String password) {
+		 driver.findElement(By.xpath("//input[@type='password']")).sendKeys(password);
+	}
+
+	@When("User clicks on login button")
+	public void user_clicks_on_login_button() {
+		driver.findElement(By.xpath("//button[.='Login']")).click();
+	}
+
+	@Then("Home page should be displayed")
+	public void home_page_should_be_displayed() {
+	    System.out.println("Home page should be displayed");
+	}
+	
+	@When("User enters Invalid username {string}")
+	public void user_enters_Invalid_username(String uname) {
+		driver.findElement(By.xpath("//input[@class='_2zrpKA _1dBPDZ']")).sendKeys(uname);
+	}
+
+	@When("User enters Invalid password  {string}")
+	public void user_enters_Invalid_password(String password) {
+		driver.findElement(By.xpath("//input[@type='password']")).sendKeys(password);
+	}
+
+	@Then("Home page should not be displayed {string}")
+	public void home_page_should_not_be_displayed(String expected_title) throws InterruptedException {
+		Thread.sleep(2000);
+		System.out.println(driver.getTitle());
+		Assert.assertEquals(expected_title, driver.getTitle());
+		
+	    System.out.println("Home page should not be displayed");
+	}
+	
+	@When("User selects payment mode")
+	public void user_selects_payment_mode(io.cucumber.datatable.DataTable dataTable) {
+		List<Map<String, String>> data = dataTable.asMaps(String.class, String.class);
+		val = data.get(2).get("mode");
+	    System.out.println(val);
+	}
+
+	@Then("Order is placed")
+	public void order_is_placed() {
+	    System.out.println("Order is placed successfully through "+val);
+	}
+
+}
